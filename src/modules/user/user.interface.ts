@@ -1,6 +1,6 @@
 import { Order } from '../order/order.interface';
 
-export type UserFullname = {
+export type UserFullName = {
   firstName: string;
   lastName: string;
 };
@@ -19,11 +19,10 @@ export type User = {
   userId: number;
   username: string;
   password: string;
-  fullName: UserFullname;
+  fullName: UserFullName;
   age: number;
   email: string;
   isActive: boolean;
   hobbies: HobbiesArray;
   address: UserAddress;
-  orders?: Order; // I will show a validation if there is no order, when order will be added, will shown here
 };
