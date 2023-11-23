@@ -1,4 +1,4 @@
-import { Schema, model, connect } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import { User, UserAddress, UserFullname } from './user/user.interface';
 import { Order } from './order/order.interface';
 
