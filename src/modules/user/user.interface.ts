@@ -1,28 +1,27 @@
-import { Order } from '../order/order.interface';
-
-export type UserFullName = {
+export type TUserFullName = {
   firstName: string;
   lastName: string;
 };
 
-export type HobbiesArray = {
+export type THobbiesArray = {
   [index: number]: string;
 };
 
-export type UserAddress = {
+export type TUserAddress = {
   street: string;
   city: string;
   country: string;
 };
 
-export type User = {
+export type TUser = {
   userId: number;
   username: string;
   password: string;
-  fullName: UserFullName;
+  fullName: TUserFullName;
   age: number;
   email: string;
   isActive: boolean;
-  hobbies: HobbiesArray;
-  address: UserAddress;
+  hobbies: THobbiesArray;
+  address: TUserAddress;
 };
+

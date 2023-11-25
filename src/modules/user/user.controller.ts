@@ -50,13 +50,33 @@ const getSingleUser = async (req: Request, res: Response) => {
   }
 };
 
+const updateSingleUser = async (req: Request, res: Response) => {
+  try {
+    const userId = req.params.userId;
+    const numberUserId = parseFloat(userId);
+    const updatedProperties = req.body;
+    // Calling Service Function to find single user data
+    const result = await UserServices.updateSingleUserFromDB(
+      numberUserId,
+      updatedProperties,
+    );
+    // Sending Response
+    res.status(200).json({
+      success: true,
+      message: 'User updated successfully!',
+      data: result,
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 const deleteSingleUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
     const numberUserId = parseFloat(userId);
     // Calling Service Function to delete single user data
-    const deleteSucceed =
-      await UserServices.deleteSingleUserFromDB(numberUserId);
+    await UserServices.deleteSingleUserFromDB(numberUserId);
     // Sending Response
     res.status(200).json({
       success: true,
@@ -71,5 +91,6 @@ export const UserControllers = {
   createAnUser,
   getAllUsers,
   getSingleUser,
+  updateSingleUser,
   deleteSingleUser,
 };

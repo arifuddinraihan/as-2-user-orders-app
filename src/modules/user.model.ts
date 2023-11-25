@@ -1,19 +1,20 @@
 import { Schema, model } from 'mongoose';
-import { User, UserAddress, UserFullName } from './user/user.interface';
-import { Order } from './order/order.interface';
+import { TUser, TUserAddress, TUserFullName } from './user/user.interface';
+import bcrypt from 'bcrypt';
+import config from '../app/config';
 
-const userFullNameSchema = new Schema<UserFullName>({
+const userFullNameSchema = new Schema<TUserFullName>({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
 });
 
-const UserAddressSchema = new Schema<UserAddress>({
+const UserAddressSchema = new Schema<TUserAddress>({
   street: { type: String, required: true },
   city: { type: String, required: true },
   country: { type: String, required: true },
 });
 
-const userSchema = new Schema<User>(
+const userSchema = new Schema<TUser>(
   {
     userId: { type: Number, required: true, unique: true },
     username: { type: String, required: true, unique: true },
@@ -25,7 +26,26 @@ const userSchema = new Schema<User>(
     hobbies: { type: Array, required: true },
     address: UserAddressSchema,
   },
-  { versionKey: false },
+  { toJSON: { virtuals: true }, versionKey: false },
 );
 
-export const UserModel = model<User>('User', userSchema);
+// Password hashing on Pre Hooks
+userSchema.pre('save', async function (next) {
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  const user = this;
+  // hashing password and save into DB
+  user.password = await bcrypt.hash(
+    user.password,
+    Number(config.bcrypt_salt_rounds),
+  );
+
+  next();
+});
+
+// Password hashing on Pre Hooks
+userSchema.post('save', async function (doc, next) {
+  doc.password = '';
+  next();
+});
+
+export const UserModel = model<TUser>('User', userSchema);
