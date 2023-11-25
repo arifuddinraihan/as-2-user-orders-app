@@ -1,15 +1,28 @@
 import { UserModel } from '../user.model';
-import { TUser } from './user.interface';
+import { TUser, TUserOrdersField } from './user.interface';
 
 const insertUserInDB = async (user: TUser) => {
   const result = await UserModel.create(user);
   return result;
 };
+// const getAllUserFromDB = async () => {
+//   const result = await UserModel.find({});
+//   return result;
+// };
 
 const getAllUserFromDB = async () => {
   const result = await UserModel.aggregate([
-    { $project: { username: 1, fullName: 1, age: 1, email: 1, address: 1 } },
+    {
+      $project: {
+        username: 1,
+        fullName: 1,
+        age: 1,
+        email: 1,
+        address: 1,
+      },
+    },
   ]);
+
   return result;
 };
 
@@ -33,10 +46,35 @@ const deleteSingleUserFromDB = async (userId: number) => {
   await UserModel.deleteOne({ userId: userId });
 };
 
+const updateSingleUseOrdersFromDB = async (
+  userId: number,
+  addedOrders: TUserOrdersField,
+) => {
+  await UserModel.findOneAndUpdate(
+    { userId },
+    { $push: { orders: addedOrders } },
+  );
+};
+
 const getOrdersOfSingleUserFromDB = async (userId: number) => {
   const result = await UserModel.aggregate([
     { $match: { userId: { $eq: userId } } },
-    { $project: { orders: 1 } },
+    { $project: { userId: 1, orders: 1 } },
+  ]);
+  return result;
+};
+
+const getOrdersTotalPriceOfSingleUserFromDB = async (userId: number) => {
+  const result = await UserModel.aggregate([
+    { $match: { userId: { $eq: userId } } },
+    { $unwind: '$orders' },
+    {
+      $addFields: {
+        subtotalPrice: { $multiply: ['$orders.price', '$orders.quantity'] },
+      },
+    },
+    { $group: { _id: '$userId', totalPrice: { $sum: '$subtotalPrice' } } },
+    { $project: { totalPrice: 1 } },
   ]);
   return result;
 };
@@ -47,5 +85,7 @@ export const UserServices = {
   getSingleUserFromDB,
   updateSingleUserFromDB,
   deleteSingleUserFromDB,
+  updateSingleUseOrdersFromDB,
   getOrdersOfSingleUserFromDB,
+  getOrdersTotalPriceOfSingleUserFromDB,
 };

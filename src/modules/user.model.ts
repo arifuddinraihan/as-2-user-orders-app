@@ -3,6 +3,8 @@ import {
   TUser,
   TUserAddress,
   TUserFullName,
+  TUserOrders,
+  TUserOrdersField,
 } from './user/user.interface';
 import bcrypt from 'bcrypt';
 import config from '../app/config';
@@ -18,11 +20,13 @@ const userAddressSchema = new Schema<TUserAddress>({
   country: { type: String, required: true },
 });
 
-// const userOrdersSchema = new Schema<TUserOrders>({
-//   productName: { type: String, required: true },
-//   price: { type: Number, required: true },
-//   quantity: { type: Number, required: true },
-// });
+const userOrdersFieldSchema = new Schema<TUserOrdersField>({
+  productName: { type: String, required: true },
+  price: { type: Number, required: true },
+  quantity: { type: Number, required: true },
+});
+
+const userOrdersSchema = new Schema<TUserOrders>([userOrdersFieldSchema]);
 
 const userSchema = new Schema<TUser>(
   {
@@ -35,10 +39,12 @@ const userSchema = new Schema<TUser>(
     isActive: { type: Boolean, required: true },
     hobbies: { type: Array, required: true },
     address: userAddressSchema,
-    orders: { type: Array },
+    orders: { type: userOrdersSchema },
   },
-  { versionKey: false },
+  { toJSON: { virtuals: true }, versionKey: false },
 );
+
+// Virtuals
 
 // Password hashing on Pre Hooks
 userSchema.pre('save', async function (next) {

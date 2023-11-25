@@ -13,15 +13,13 @@ export type TUserAddress = {
   country: string;
 };
 
-export type TUserOrders = {
+export type TUserOrdersField = {
   productName: string;
   price: number;
   quantity: number;
 };
 
-export type TUserOrdersArray = {
-  [index: number]: TUserOrders;
-};
+export type TUserOrders = [TUserOrdersField];
 
 export type TUser = {
   userId: number;
@@ -33,5 +31,5 @@ export type TUser = {
   isActive: boolean;
   hobbies: THobbiesArray;
   address: TUserAddress;
-  orders?: TUserOrdersArray;
+  orders?: TUserOrders;
 };
