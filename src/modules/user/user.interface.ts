@@ -13,6 +13,16 @@ export type TUserAddress = {
   country: string;
 };
 
+export type TUserOrders = {
+  productName: string;
+  price: number;
+  quantity: number;
+};
+
+export type TUserOrdersArray = {
+  [index: number]: TUserOrders;
+};
+
 export type TUser = {
   userId: number;
   username: string;
@@ -23,5 +33,5 @@ export type TUser = {
   isActive: boolean;
   hobbies: THobbiesArray;
   address: TUserAddress;
+  orders?: TUserOrdersArray;
 };
-

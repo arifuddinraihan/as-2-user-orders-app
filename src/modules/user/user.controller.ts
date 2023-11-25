@@ -87,10 +87,30 @@ const deleteSingleUser = async (req: Request, res: Response) => {
     console.error(error);
   }
 };
+
+const getOrdersOfSingleUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const numberUserId = parseFloat(userId);
+    // Calling Service Function to find single user data
+    const result = await UserServices.getOrdersOfSingleUserFromDB(numberUserId);
+    // Sending Response
+    res.status(200).json({
+      success: true,
+      message: 'User fetched successfully!',
+      data: result,
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
 export const UserControllers = {
   createAnUser,
   getAllUsers,
   getSingleUser,
   updateSingleUser,
   deleteSingleUser,
+  getOrdersOfSingleUser,
 };
