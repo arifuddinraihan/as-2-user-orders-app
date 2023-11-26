@@ -1,3 +1,8 @@
+export type TUserOrder = {
+  productName: string;
+  price: number;
+  quantity: number;
+};
 export type TUser = {
   userId: number;
   username: string;
@@ -11,5 +16,5 @@ export type TUser = {
   isActive: boolean;
   hobbies?: string[];
   address: { street: string; city: string; country: string };
-  orders?: [{ productName: string; price: number; quantity: number }];
+  orders?: Array<TUserOrder>;
 };

@@ -1,10 +1,13 @@
-import { Schema, model } from 'mongoose';
-import { TUser } from './user/user.interface';
+import { Number, Schema, model } from 'mongoose';
+import { TUser, TUserOrder } from './user/user.interface';
 import bcrypt from 'bcrypt';
 import config from '../app/config';
 
-const 
-
+export const orderSchema = new Schema<TUserOrder>({
+  productName: { type: String, required: true },
+  price: { type: Number, required: true },
+  quantity: { type: Number, required: true },
+});
 
 const userSchema = new Schema<TUser>(
   {
@@ -13,13 +16,14 @@ const userSchema = new Schema<TUser>(
     password: { type: String, required: true },
     fullName: { type: Object, required: true },
     age: { type: Number, required: true },
-    email: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
     isActive: { type: Boolean, required: true },
     hobbies: { type: [String], required: false },
-    address: { type: Object, required: true },,
-    orders: [
-      { type: Object, required: false },
-    ],
+    address: { type: Object, required: true },
+    orders: {
+      type: Array<TUserOrder>,
+      required: false,
+    },
   },
   { toJSON: { virtuals: true }, versionKey: false },
 );

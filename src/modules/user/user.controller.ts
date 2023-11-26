@@ -98,6 +98,8 @@ const updateSingleUserOrders = async (req: Request, res: Response) => {
     const userId = req.params.userId;
     const numberUserId = parseFloat(userId);
     const updatedProperties = req.body;
+    // Zod Parser for orders type
+
     // Calling Service Function to add orders to single user data
     await UserServices.updateSingleUseOrdersFromDB(
       numberUserId,
