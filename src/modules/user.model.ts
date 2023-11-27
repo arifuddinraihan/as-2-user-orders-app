@@ -1,27 +1,65 @@
-import { Number, Schema, model } from 'mongoose';
-import { TUser, TUserOrder } from './user/user.interface';
+import { Schema, model } from 'mongoose';
+import {
+  TUser,
+  TUserAddress,
+  TUserFullName,
+  TUserOrder,
+  UserFunctions,
+} from './user/user.interface';
 import bcrypt from 'bcrypt';
 import config from '../app/config';
 
-export const orderSchema = new Schema<TUserOrder>({
-  productName: { type: String, required: true },
-  price: { type: Number, required: true },
-  quantity: { type: Number, required: true },
+export const userFullNameSchema = new Schema<TUserFullName>({
+  firstName: { type: String, required: [true, 'First Name is required'] },
+  lastName: { type: String, required: [true, 'Last Name is required'] },
 });
 
-const userSchema = new Schema<TUser>(
+export const userAddressSchema = new Schema<TUserAddress>({
+  street: { type: String, required: [true, 'Street Address is required'] },
+  city: { type: String, required: [true, 'City is required'] },
+  country: { type: String, required: [true, 'Country is required'] },
+});
+
+export const orderSchema = new Schema<TUserOrder>({
+  productName: { type: String, required: [true, 'Product Name is required'] },
+  price: { type: Number, required: [true, 'Price is required'] },
+  quantity: { type: Number, required: [true, 'Quantity is required'] },
+});
+
+const userSchema = new Schema<TUser, UserFunctions>(
   {
-    userId: { type: Number, required: true, unique: true },
-    username: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    fullName: { type: Object, required: true },
-    age: { type: Number, required: true },
-    email: { type: String, required: true, unique: true },
+    userId: {
+      type: Number,
+      required: [true, 'userId is required'],
+      unique: true,
+    },
+    username: {
+      type: String,
+      required: [true, 'username is required'],
+      unique: true,
+    },
+    password: { type: String, required: [true, 'password is required'] },
+    fullName: {
+      type: userFullNameSchema,
+      required: [true, 'Full Name is required'],
+    },
+    age: { type: Number, required: [true, 'Age is required'] },
+    email: {
+      type: String,
+      required: [true, 'Email is required'],
+      unique: true,
+    },
     isActive: { type: Boolean, required: true },
-    hobbies: { type: [String], required: false },
-    address: { type: Object, required: true },
+    hobbies: {
+      type: [String],
+      required: [true, 'Must have at least one Hobby'],
+    },
+    address: {
+      type: userAddressSchema,
+      required: [true, 'Address is required'],
+    },
     orders: {
-      type: Array<TUserOrder>,
+      type: [orderSchema],
       required: false,
     },
   },
@@ -29,6 +67,12 @@ const userSchema = new Schema<TUser>(
 );
 
 // Virtuals
+
+// If user exists in the data
+userSchema.statics.isUserExists = async function (userId: number) {
+  const existingUser = await UserModel.findOne({ userId });
+  return existingUser;
+};
 
 // Password hashing on Pre Hooks
 userSchema.pre('save', async function (next) {
@@ -40,13 +84,16 @@ userSchema.pre('save', async function (next) {
     Number(config.bcrypt_salt_rounds),
   );
 
+  // Calling next function
   next();
 });
 
-// Password hashing on Pre Hooks
+// Password showing empty on Post Hooks
 userSchema.post('save', async function (doc, next) {
   doc.password = '';
   next();
 });
 
-export const UserModel = model<TUser>('User', userSchema);
+// Middlewares
+
+export const UserModel = model<TUser, UserFunctions>('User', userSchema);

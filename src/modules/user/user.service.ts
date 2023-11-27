@@ -1,14 +1,11 @@
 import { UserModel } from '../user.model';
-import { TUser, TUserOrdersField } from './user.interface';
+import { TUser, TUserOrder } from './user.interface';
 
 const insertUserInDB = async (user: TUser) => {
+  // console.log(user)
   const result = await UserModel.create(user);
   return result;
 };
-// const getAllUserFromDB = async () => {
-//   const result = await UserModel.find({});
-//   return result;
-// };
 
 const getAllUserFromDB = async () => {
   const result = await UserModel.aggregate([
@@ -27,7 +24,10 @@ const getAllUserFromDB = async () => {
 };
 
 const getSingleUserFromDB = async (userId: number) => {
-  const result = await UserModel.findOne({ userId });
+  const result = await UserModel.findOne(
+    { userId },
+    { username: 1, fullName: 1, age: 1, email: 1, address: 1 },
+  );
   return result;
 };
 
@@ -48,7 +48,7 @@ const deleteSingleUserFromDB = async (userId: number) => {
 
 const updateSingleUseOrdersFromDB = async (
   userId: number,
-  addedOrders: TUserOrdersField,
+  addedOrders: TUserOrder,
 ) => {
   await UserModel.findOneAndUpdate(
     { userId },
@@ -73,8 +73,7 @@ const getOrdersTotalPriceOfSingleUserFromDB = async (userId: number) => {
         subtotalPrice: { $multiply: ['$orders.price', '$orders.quantity'] },
       },
     },
-    { $group: { _id: '$userId', totalPrice: { $sum: '$subtotalPrice' } } },
-    { $project: { totalPrice: 1 } },
+    { $group: { _id: null, totalPrice: { $sum: '$subtotalPrice' } } },
   ]);
   return result;
 };

@@ -1,35 +1,34 @@
 import { z } from 'zod';
 
 const userFullNameSchema = z.object({
-  firstName: z.string().nonempty('First name is required'),
-  lastName: z.string().nonempty('Last name is required'),
+  firstName: z.string(),
+  lastName: z.string(),
 });
 
 const userAddressSchema = z.object({
-  street: z.string().nonempty('Street is required'),
-  city: z.string().nonempty('City is required'),
-  country: z.string().nonempty('Country is required'),
+  street: z.string(),
+  city: z.string(),
+  country: z.string(),
 });
 
-const userOrdersFieldSchema = z.object({
-  productName: z.string().nonempty('Product name is required'),
-  price: z.number().nonnegative('Price must be a non-negative number'),
-  quantity: z.number().nonnegative('Quantity must be a non-negative number'),
+const userOrderSchema = z.object({
+  productName: z.string(),
+  price: z.number().positive(),
+  quantity: z.number().positive(),
 });
-
-const userOrdersSchema = z.array(userOrdersFieldSchema).optional();
 
 const userValidationSchema = z.object({
   userId: z.number().positive(),
-  username: z.string().nonempty('Username is required'),
-  password: z.string().nonempty('Password is required'),
+  username: z.string(),
+  password: z.string(),
   fullName: userFullNameSchema,
   age: z.number().positive(),
-  email: z.string().email('Invalid email format'),
+  email: z.string().email(),
   isActive: z.boolean(),
-  hobbies: z.array(z.string()).optional(), // Optional hobbies array
+  hobbies: z.array(z.string()),
   address: userAddressSchema,
-  orders: userOrdersSchema.optional(), // Optional orders array
+  orders: z.array(userOrderSchema).optional(),
 });
 
 export const validateUser = userValidationSchema;
+export const validateOrder = userOrderSchema;
