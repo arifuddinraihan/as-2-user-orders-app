@@ -12,6 +12,7 @@ const createAnUser = async (req: Request, res: Response) => {
 
     // Calling Service Function to send this data to DB
     const result = await UserServices.insertUserInDB(zodParsedData);
+
     // Sending Response
     res.status(200).json({
       success: true,
@@ -74,6 +75,7 @@ const getSingleUser = async (req: Request, res: Response) => {
 
     // Calling Service Function to find single user data
     const result = await UserServices.getSingleUserFromDB(numberUserId);
+
     // Sending Response
     res.status(200).json({
       success: true,
@@ -100,12 +102,16 @@ const updateSingleUser = async (req: Request, res: Response) => {
       });
     }
 
+    // Update data body
     const updatedProperties = req.body;
+    const zodParsedUpdatedData = validateUser.parse(updatedProperties);
+
     // Calling Service Function to update single user data
     const result = await UserServices.updateSingleUserFromDB(
       numberUserId,
-      updatedProperties,
+      zodParsedUpdatedData,
     );
+
     // Sending Response
     res.status(200).json({
       success: true,
@@ -134,6 +140,7 @@ const deleteSingleUser = async (req: Request, res: Response) => {
 
     // Calling Service Function to delete single user data
     await UserServices.deleteSingleUserFromDB(numberUserId);
+    
     // Sending Response
     res.status(200).json({
       success: true,

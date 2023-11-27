@@ -35,10 +35,11 @@ const updateSingleUserFromDB = async (
   userId: number,
   updatedProperties: Partial<TUser>,
 ) => {
-  const result = await UserModel.findOneAndUpdate(
-    { userId },
+  const result = await UserModel.aggregate([
+    { $match: { userId: { $eq: userId } } },
     { $set: updatedProperties },
-  );
+    { $project: { username: 1, fullName: 1, age: 1, email: 1, address: 1 } },
+  ]);
   return result;
 };
 
@@ -46,12 +47,12 @@ const deleteSingleUserFromDB = async (userId: number) => {
   await UserModel.deleteOne({ userId: userId });
 };
 
-const updateSingleUseOrdersFromDB = async (
+const updateSingleUserOrdersFromDB = async (
   userId: number,
   addedOrders: TUserOrder,
 ) => {
   await UserModel.findOneAndUpdate(
-    { userId },
+    { userId: userId },
     { $push: { orders: addedOrders } },
   );
 };
@@ -84,7 +85,7 @@ export const UserServices = {
   getSingleUserFromDB,
   updateSingleUserFromDB,
   deleteSingleUserFromDB,
-  updateSingleUseOrdersFromDB,
+  updateSingleUseOrdersFromDB: updateSingleUserOrdersFromDB,
   getOrdersOfSingleUserFromDB,
   getOrdersTotalPriceOfSingleUserFromDB,
 };
