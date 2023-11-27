@@ -5,10 +5,10 @@ import { UserModel } from '../user.model';
 
 const createAnUser = async (req: Request, res: Response) => {
   try {
-    const { user: userData } = req.body;
+    const user = req.body;
 
     // Validation using Zod
-    const zodParsedData = validateUser.parse(userData);
+    const zodParsedData = validateUser.parse(user);
 
     // Calling Service Function to send this data to DB
     const result = await UserServices.insertUserInDB(zodParsedData);
@@ -29,7 +29,11 @@ const createAnUser = async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
-    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: 'Something went wrong',
+      error: error,
+    });
   }
 };
 
@@ -54,7 +58,11 @@ const getAllUsers = async (req: Request, res: Response) => {
       data: null,
     });
   } catch (error) {
-    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: 'Something went wrong',
+      error: error,
+    });
   }
 };
 
@@ -83,7 +91,11 @@ const getSingleUser = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: 'Something went wrong',
+      error: error,
+    });
   }
 };
 
@@ -119,7 +131,11 @@ const updateSingleUser = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: 'Something went wrong',
+      error: error,
+    });
   }
 };
 
@@ -140,7 +156,7 @@ const deleteSingleUser = async (req: Request, res: Response) => {
 
     // Calling Service Function to delete single user data
     await UserServices.deleteSingleUserFromDB(numberUserId);
-    
+
     // Sending Response
     res.status(200).json({
       success: true,
@@ -148,7 +164,11 @@ const deleteSingleUser = async (req: Request, res: Response) => {
       data: null,
     });
   } catch (error) {
-    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: 'Something went wrong',
+      error: error,
+    });
   }
 };
 
@@ -181,7 +201,11 @@ const updateSingleUserOrders = async (req: Request, res: Response) => {
       data: null,
     });
   } catch (error) {
-    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: 'Something went wrong',
+      error: error,
+    });
   }
 };
 
@@ -210,7 +234,11 @@ const getOrdersOfSingleUser = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: 'Something went wrong',
+      error: error,
+    });
   }
 };
 
@@ -242,7 +270,11 @@ const getOrdersTotalPriceOfSingleUser = async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
-    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: 'Something went wrong',
+      error: error,
+    });
   }
 };
 

@@ -10,14 +10,26 @@ import bcrypt from 'bcrypt';
 import config from '../app/config';
 
 export const userFullNameSchema = new Schema<TUserFullName>({
-  firstName: { type: String, required: [true, 'First Name is required'] },
+  firstName: {
+    type: String,
+    required: [true, 'First Name is required'],
+    min: 3,
+    max: 20,
+    trim: true,
+    minlength: [3, 'Min allowed length is 3 characters'],
+    maxlength: [20, 'Max allowed length is 20 characters'],
+  },
   lastName: { type: String, required: [true, 'Last Name is required'] },
 });
 
 export const userAddressSchema = new Schema<TUserAddress>({
-  street: { type: String, required: [true, 'Street Address is required'] },
-  city: { type: String, required: [true, 'City is required'] },
-  country: { type: String, required: [true, 'Country is required'] },
+  street: {
+    type: String,
+    required: [true, 'Street Address is required'],
+    min: 3,
+  },
+  city: { type: String, required: [true, 'City is required'], min: 3 },
+  country: { type: String, required: [true, 'Country is required'], min: 1 },
 });
 
 export const orderSchema = new Schema<TUserOrder>({
@@ -37,6 +49,9 @@ const userSchema = new Schema<TUser, UserFunctions>(
       type: String,
       required: [true, 'username is required'],
       unique: true,
+      trim: true,
+      minlength: [3, 'Min allowed length is 3 characters'],
+      maxlength: [20, 'Max allowed length is 20 characters'],
     },
     password: { type: String, required: [true, 'password is required'] },
     fullName: {

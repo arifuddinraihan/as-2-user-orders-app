@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 const userFullNameSchema = z.object({
-  firstName: z.string(),
+  firstName: z.string().min(3).max(20).trim(),
   lastName: z.string(),
 });
 

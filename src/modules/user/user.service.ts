@@ -26,7 +26,16 @@ const getAllUserFromDB = async () => {
 const getSingleUserFromDB = async (userId: number) => {
   const result = await UserModel.findOne(
     { userId },
-    { username: 1, fullName: 1, age: 1, email: 1, address: 1 },
+    {
+      userId: 1,
+      username: 1,
+      fullName: 1,
+      age: 1,
+      email: 1,
+      isActive: 1,
+      hobbies: 1,
+      address: 1,
+    },
   );
   return result;
 };
@@ -38,7 +47,18 @@ const updateSingleUserFromDB = async (
   const result = await UserModel.aggregate([
     { $match: { userId: { $eq: userId } } },
     { $set: updatedProperties },
-    { $project: { username: 1, fullName: 1, age: 1, email: 1, address: 1 } },
+    {
+      $project: {
+        userId: 1,
+        username: 1,
+        fullName: 1,
+        age: 1,
+        email: 1,
+        isActive: 1,
+        hobbies: 1,
+        address: 1,
+      },
+    },
   ]);
   return result;
 };
@@ -60,9 +80,9 @@ const updateSingleUserOrdersFromDB = async (
 const getOrdersOfSingleUserFromDB = async (userId: number) => {
   const result = await UserModel.aggregate([
     { $match: { userId: { $eq: userId } } },
-    { $project: { userId: 1, orders: 1 } },
+    { $project: { orders: 1 } },
   ]);
-  return result;
+  return result[0];
 };
 
 const getOrdersTotalPriceOfSingleUserFromDB = async (userId: number) => {
