@@ -40,26 +40,33 @@ const getSingleUserFromDB = async (userId: number) => {
   return result;
 };
 
-const updateSingleUserFromDB = async (
-  userId: number,
-  updatedProperties: Partial<TUser>,
-) => {
-  const result = await UserModel.aggregate([
-    { $match: { userId: { $eq: userId } } },
-    { $set: updatedProperties },
+const updateSingleUserFromDB = async (id: number, updatedProperties: TUser) => {
+  const {
+    userId,
+    username,
+    password,
+    fullName,
+    age,
+    email,
+    isActive,
+    hobbies,
+    address,
+  } = updatedProperties;
+  const result = await UserModel.findOneAndUpdate(
+    { userId: id },
     {
-      $project: {
-        userId: 1,
-        username: 1,
-        fullName: 1,
-        age: 1,
-        email: 1,
-        isActive: 1,
-        hobbies: 1,
-        address: 1,
-      },
+      userId,
+      username,
+      password,
+      fullName,
+      age,
+      email,
+      isActive,
+      hobbies,
+      address,
     },
-  ]);
+    { new: true },
+  );
   return result;
 };
 

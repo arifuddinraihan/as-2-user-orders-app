@@ -3,6 +3,7 @@ import { UserServices } from './user.service';
 import { validateOrder, validateUser } from './user.validation';
 import { UserModel } from '../user.model';
 
+// Create User Controller using inserUserInDb function from service
 const createAnUser = async (req: Request, res: Response) => {
   try {
     const user = req.body;
@@ -37,6 +38,7 @@ const createAnUser = async (req: Request, res: Response) => {
   }
 };
 
+// Getting all User Controller using getAllUserFromDB function from service
 const getAllUsers = async (req: Request, res: Response) => {
   try {
     // Calling Service Function to find all users data
@@ -66,6 +68,7 @@ const getAllUsers = async (req: Request, res: Response) => {
   }
 };
 
+// Getting a single User Controller using getSingleUserFromDB function from service
 const getSingleUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
@@ -99,6 +102,7 @@ const getSingleUser = async (req: Request, res: Response) => {
   }
 };
 
+// Updating a single User Controller using updateSingleUserFromDB function from service
 const updateSingleUser = async (req: Request, res: Response) => {
   try {
     const userId = req.params.userId;
@@ -123,13 +127,42 @@ const updateSingleUser = async (req: Request, res: Response) => {
       numberUserId,
       zodParsedUpdatedData,
     );
-
-    // Sending Response
-    res.status(200).json({
-      success: true,
-      message: 'User updated successfully!',
-      data: result,
-    });
+    // If Result become null then will receive not completed response
+    if (result === null) {
+      // Sending Response
+      res.status(404).json({
+        success: false,
+        message: 'User update not completed!',
+        data: result,
+      });
+    } else {
+      // If Result is okay then user will receive successfull response
+      const {
+        userId,
+        username,
+        fullName,
+        age,
+        email,
+        isActive,
+        hobbies,
+        address,
+      } = result;
+      // Sending Response
+      res.status(200).json({
+        success: true,
+        message: 'User updated successfully!',
+        data: {
+          userId,
+          username,
+          fullName,
+          age,
+          email,
+          isActive,
+          hobbies,
+          address,
+        },
+      });
+    }
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -139,6 +172,7 @@ const updateSingleUser = async (req: Request, res: Response) => {
   }
 };
 
+// Deleting a single User Controller using deleteSingleUserFromDB function from service
 const deleteSingleUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
@@ -172,6 +206,7 @@ const deleteSingleUser = async (req: Request, res: Response) => {
   }
 };
 
+// Updating a single User with Orders Controller using updateSingleUserOrdersFromDB function from service
 const updateSingleUserOrders = async (req: Request, res: Response) => {
   try {
     const userId = req.params.userId;
@@ -209,6 +244,7 @@ const updateSingleUserOrders = async (req: Request, res: Response) => {
   }
 };
 
+// Getting a single User Orders Data Controller using getOrdersOfSingleUserFromDB function from service
 const getOrdersOfSingleUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
@@ -242,6 +278,7 @@ const getOrdersOfSingleUser = async (req: Request, res: Response) => {
   }
 };
 
+// Getting a single User Total Price from all Orders Controller using getOrdersTotalPriceOfSingleUserFromDB function from service
 const getOrdersTotalPriceOfSingleUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
