@@ -9,7 +9,7 @@ app.use(express.json());
 app.use(cors());
 
 // Application Routes
-app.use('/v1', userRoutes);
+app.use('/', userRoutes);
 
 const getAController = (req: Request, res: Response) => {
   res.send('Hello World!');

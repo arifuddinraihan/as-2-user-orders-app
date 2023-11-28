@@ -45,19 +45,19 @@ const getAllUsers = async (req: Request, res: Response) => {
     const result = await UserServices.getAllUserFromDB();
 
     // If no user exists showing no user found
-    if (result.length > 0) {
-      res.status(200).json({
-        success: true,
-        message: 'Users fetched successfully!',
-        data: result,
-      });
-    }
+    // if (result.length > 0) {
+    //   res.status(200).json({
+    //     success: true,
+    //     message: 'Users fetched successfully!',
+    //     data: result,
+    //   });
+    // }
 
     // Sending Response
     res.status(200).json({
       success: true,
-      message: 'No user found.',
-      data: null,
+      message: 'Users fetched successfully!',
+      data: result,
     });
   } catch (error) {
     res.status(500).json({

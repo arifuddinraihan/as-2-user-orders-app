@@ -78,10 +78,8 @@ const userSchema = new Schema<TUser, UserFunctions>(
       required: false,
     },
   },
-  { toJSON: { virtuals: true }, versionKey: false },
+  { versionKey: false },
 );
-
-// Virtuals
 
 // If user exists in the data
 userSchema.statics.isUserExists = async function (userId: number) {
@@ -108,7 +106,5 @@ userSchema.post('save', async function (doc, next) {
   doc.password = '';
   next();
 });
-
-// Middlewares
 
 export const UserModel = model<TUser, UserFunctions>('User', userSchema);

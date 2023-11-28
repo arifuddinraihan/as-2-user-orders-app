@@ -1,4 +1,5 @@
 # Project Title: Users and Orders CURD Application
+
 ## AS2-B2-Arif_Uddin
 
 ## Description
@@ -12,6 +13,20 @@ Before you begin, ensure you have met the following requirements:
 - Node.js installed
 - MongoDB installed and running
 - npm or yarn installed
+
+## Dependencies
+
+```
+{
+    "@types/express": "^4.17.21",
+    "@types/mongoose": "^5.11.97",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "mongoose": "^8.0.1",
+    "ts-node-dev": "^2.0.0",
+    "zod": "^3.22.4"
+  }
+```
 
 ## Installation
 
