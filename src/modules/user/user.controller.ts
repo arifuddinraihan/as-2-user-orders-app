@@ -108,6 +108,10 @@ const updateSingleUser = async (req: Request, res: Response) => {
     const userId = req.params.userId;
     const numberUserId = parseFloat(userId);
 
+    // Update data body
+    const updatedProperties = req.body;
+    const zodParsedUpdatedData = validateUser.parse(updatedProperties);
+
     // Calling User Exists Function from UserModel
     const userExists = await UserModel.isUserExists(numberUserId);
     if (!userExists) {
@@ -117,10 +121,6 @@ const updateSingleUser = async (req: Request, res: Response) => {
         error: { code: 404, description: 'User not found!' },
       });
     }
-
-    // Update data body
-    const updatedProperties = req.body;
-    const zodParsedUpdatedData = validateUser.parse(updatedProperties);
 
     // Calling Service Function to update single user data
     const result = await UserServices.updateSingleUserFromDB(
